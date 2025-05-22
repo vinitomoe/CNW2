@@ -12,7 +12,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Criar a tabela se não existir
+// Criação da tabela
 const criarTabela = async () => {
   try {
     await pool.query(`
@@ -21,14 +21,15 @@ const criarTabela = async () => {
         texto TEXT NOT NULL
       );
     `);
-    console.log('Tabela mensagens verificada/criada com sucesso!');
+    console.log('Tabela mensagens verificada/criada!');
   } catch (err) {
     console.error('Erro ao criar tabela:', err);
   }
 };
 
-criarTabela(); // chama ao iniciar o servidor
+criarTabela();
 
+// Rotas
 app.get('/dados', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM mensagens');
@@ -48,6 +49,16 @@ app.post('/dados', async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000 topzeira');
+app.delete('/dados/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM mensagens WHERE id = $1', [id]);
+    res.sendStatus(200);
+  } catch (e) {
+    res.status(500).json({ erro: e.message });
+  }
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Servidor rodando na porta 3000!');
 });
