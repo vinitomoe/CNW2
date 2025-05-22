@@ -47,10 +47,10 @@
       await fetch(api + '/dados/' + id, {
         method: 'DELETE'
       });
-      await carregar();
+      carregar();
     }
 
-    await carregar();
+    carregar();
   </script>
 </body>
 </html>
