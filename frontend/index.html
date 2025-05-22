@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Meu site com banco</title>
+</head>
+<body>
+  <h1>Enviar mensagem</h1>
+  <input id="msg" placeholder="Digite algo" />
+  <button onclick="enviar()">Enviar</button>
+
+  <h2>Mensagens:</h2>
+  <ul id="lista"></ul>
+
+  <script>
+    const api = 'https://SEU-BACKEND.onrender.com';
+
+    function enviar() {
+      const texto = document.getElementById('msg').value;
+      fetch(`${api}/dados`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ texto })
+      }).then(() => carregar());
+    }
+
+    function carregar() {
+      fetch(`${api}/dados`)
+        .then(res => res.json())
+        .then(data => {
+          const lista = document.getElementById('lista');
+          lista.innerHTML = '';
+          data.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.texto;
+            lista.appendChild(li);
+          });
+        });
+    }
+
+    carregar();
+  </script>
+</body>
+</html>
