@@ -12,6 +12,23 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// Criar a tabela se não existir
+const criarTabela = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS mensagens (
+        id SERIAL PRIMARY KEY,
+        texto TEXT NOT NULL
+      );
+    `);
+    console.log('Tabela mensagens verificada/criada com sucesso!');
+  } catch (err) {
+    console.error('Erro ao criar tabela:', err);
+  }
+};
+
+criarTabela(); // chama ao iniciar o servidor
+
 app.get('/dados', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM mensagens');
